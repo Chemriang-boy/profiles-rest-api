@@ -43,4 +43,4 @@ class UserProfileSerializer(serializers.ModelSerializer):
         if 'password' in validated_data:
             password = validated_data.pop('password')
             instance.set_password(password)
-        return super().pudate(instance, validated_data)
+        return super().update(instance, validated_data)

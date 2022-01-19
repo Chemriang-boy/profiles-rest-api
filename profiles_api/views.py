@@ -9,6 +9,9 @@ from rest_framework import viewsets
 from rest_framework.authentication import TokenAuthentication
 #filterモジュールの読み込み。名前やemailからプロファイルを探せるようにする
 from rest_framework import filters
+#auth tokenを発行できるようにするモジュール
+from rest_framework.authtoken.views import ObtainAuthToken
+from rest_framework.settings import api_settings
 
 #serializerをimport
 from profiles_api import serializers
@@ -156,3 +159,10 @@ class UserProfileViewSet(viewsets.ModelViewSet):
     #filters.SearchFilterは、Django rest_frameworkにある。
     filter_backends = (filters.SearchFilter,)
     search_fields = ('name', 'email')
+
+
+#ObtainAuthTokenはブラウザー上で見えないので（デフォルトでは）、それを可視化させる
+class UserLoginApiView(ObtainAuthToken):
+    """Handle creating user authentication tokens"""
+    #DEFAULT_RENDERER_CLASSESを呼び出すために、api_settingsを読み込む必要があった。
+    renderer_classes = api_settings.DEFAULT_RENDERER_CLASSES

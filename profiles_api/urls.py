@@ -21,6 +21,9 @@ urlpatterns = [
     #path("", views.クラス名.as_view())
     #APIViewの時のURL
     path('hello-view/', views.HelloApiView.as_view()),
+    #as_viewはそういう決まりだから
+    #ログイン用のAPI
+    path('login/', views.UserLoginApiView.as_view()),
     #ViewSetの時のURL
     #router.register によって生成されたURLを、includeは取り込んで、URLパターンに反映させる。
     path('', include(router.urls))
