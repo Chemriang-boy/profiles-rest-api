@@ -7,6 +7,8 @@ from rest_framework import viewsets
 #仕組みとしては、ユーザーがログインしたら、ランダムトークンが発行されて、それがマッチ
 #するか否かで本人確認を行う。
 from rest_framework.authentication import TokenAuthentication
+#filterモジュールの読み込み。名前やemailからプロファイルを探せるようにする
+from rest_framework import filters
 
 #serializerをimport
 from profiles_api import serializers
@@ -150,3 +152,7 @@ class UserProfileViewSet(viewsets.ModelViewSet):
     authentication_classes = (TokenAuthentication, )
     #UpdateOwnProfile は、permissions.pyで作った、IDが一致しているかの関数
     permission_classes = (permissions.UpdateOwnProfile,)
+    #tuple型だと分からせるためにカンマを打つ
+    #filters.SearchFilterは、Django rest_frameworkにある。
+    filter_backends = (filters.SearchFilter,)
+    search_fields = ('name', 'email')
