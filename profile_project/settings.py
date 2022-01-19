@@ -122,4 +122,5 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+#profiles_api/models.pyの中のクラス、UserProfileの事だと思われる
 AUTH_USER_MODEL = 'profiles_api.UserProfile'

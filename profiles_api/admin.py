@@ -1,5 +1,6 @@
 from django.contrib import admin
 
+#modelを読み込めるようにする
 from profiles_api import models
 
 # Register your models here.
