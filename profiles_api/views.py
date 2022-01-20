@@ -12,6 +12,8 @@ from rest_framework import filters
 #auth tokenを発行できるようにするモジュール
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.settings import api_settings
+#もしユーザーがauthenticated出なけではread_onlyにする関数
+from rest_framework.permissions import IsAuthenticated
 
 #serializerをimport
 from profiles_api import serializers
@@ -166,3 +168,25 @@ class UserLoginApiView(ObtainAuthToken):
     """Handle creating user authentication tokens"""
     #DEFAULT_RENDERER_CLASSESを呼び出すために、api_settingsを読み込む必要があった。
     renderer_classes = api_settings.DEFAULT_RENDERER_CLASSES
+
+
+class UserProfileFeedViewSet(viewsets.ModelViewSet):
+    """Handles creating reading and updating profile feed items"""
+    authentication_classes = (TokenAuthentication,)
+    #serializers.pyから関数をインポート
+    serializer_class = serializers.ProfileFeedItemSerializer
+    #models.pyのProfilesFeedItem.objects関数はserialziers.pyで読み込まれてて
+    #'id', 'user_profile', 'status_text', 'created_on'を取り出す。
+    queryset = models.ProfileFeedItem.objects.all()
+    permission_classes=(
+        #permissions.pyで作った関数
+        permissions.UpdateOwnStatus,
+        #Django rest_framewokで用意されている関数
+        IsAuthenticated
+    )
+
+    #user_profileに関しては読み取りのみにする（read_only）
+    #新しいobjectが生成されて、"perform_create"が発動
+    def perform_create(self, serializer):
+        """Sets the user profile to the logged in user"""
+        serializer.save(user_profile=self.request.user)

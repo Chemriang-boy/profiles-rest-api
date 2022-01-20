@@ -7,3 +7,4 @@ from profiles_api import models
 #アドミン画面に反映させる処理
 #User profileを追加
 admin.site.register(models.UserProfile)
+admin.site.register(models.ProfileFeedItem)

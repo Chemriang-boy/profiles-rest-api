@@ -44,3 +44,17 @@ class UserProfileSerializer(serializers.ModelSerializer):
             password = validated_data.pop('password')
             instance.set_password(password)
         return super().update(instance, validated_data)
+
+
+#
+class ProfileFeedItemSerializer(serializers.ModelSerializer):
+    """Serializers profile feed items"""
+
+    class Meta:
+        model = models.ProfileFeedItem
+        #idはお新しいobjectが生成されると自動で新しいIDが振られる
+        #created_on はobjectが生成された時間
+        #ということで、書き換え可能なのは'user_profile', 'status_text'
+        fields = ('id', 'user_profile', 'status_text', 'created_on')
+        #'user_profile'はread_onlyに変更したい
+        extra_kwargs = {'user_profile': {'read_only':True}}

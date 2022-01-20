@@ -11,10 +11,13 @@ router = DefaultRouter()
 #router.register によって、ViewSetに関係しているURLのリストを生成している
 #api/hello-viewset というURLの時に、”views.HelloViewSet”を参照するようにしている
 router.register('hello-viewset', views.HelloViewSet, base_name='hello-viewset')
+
+
 #profiles_projectの中にあるurls.pyで、
 #path('api/', include('profiles_api.urls')),となっているため、
 #URLの頭に頭にapiが付く
 router.register('profile', views.UserProfileViewSet)
+router.register('feed', views.UserProfileFeedViewSet)
 
 urlpatterns = [
     #helloApiViewはviews.pyで作ったApiView

@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser
 from django.contrib.auth.models import PermissionsMixin
 from django.contrib.auth.models import BaseUserManager
+from django.conf import settings
 
 # Create your models here.
 class UserProfileManager(BaseUserManager):
@@ -63,3 +64,29 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
     def __str__(self):
         """Return string representation of our user"""
         return self.email
+
+
+#/api/feedでfeed itemを見られるようにする
+#システム内でユーザーが自分の情報をアップデート出来るようにする
+#python manage.py makemigrationsによって、migrationの中に、profilefeeditem.pyが作られる
+class ProfileFeedItem(models.Model):
+    """Profile status update"""
+    #foreign keyを使うことで、モデル同士をつなぐことが出来る。
+    #これにより、デフォルトでUSERPROFILEモデルを使って、必要に応じてDjango のデフォルトに
+    #戻すことが可能になる。
+    user_profile = models.ForeignKey(
+        #USERPROFILEモデル
+        #settings.pyにて、AUTH_USER_MODEL = 'profiles_api.UserProfile'と定義
+        settings.AUTH_USER_MODEL,
+        #on_deleteは、参照されたモデル（今回はUSERPROFILEモデル）を削除する
+        #models.cascadeは関連するモデルを全て消去
+        on_delete=models.CASCADE
+    )
+    #status_text は、なんのfeed updateをしたのかを表す
+    status_text = models.CharField(max_length=255)
+    #auto_now_add=True は、新しいfeed itemを作ったときに、自動的にタイムスタンプを発行する
+    created_on = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        """Return the model as a string"""
+        return self.status_text
